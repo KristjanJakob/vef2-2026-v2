@@ -53,16 +53,17 @@ async function query<T extends pg.QueryResultRow>(
  * @returns True if the initialization succeeded, false otherwise.
  */
 export async function init(): Promise<boolean> {
-  // búum til töfluna okkar ef hún er ekki til
-  // SQL til þess:
-  /*
-  CREATE TABLE IF NOT EXISTS todos (
+    const sql = `
+    CREATE TABLE IF NOT EXISTS todos (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
       finished BOOLEAN NOT NULL DEFAULT false,
       created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     )
-  */
+  `;
+  const result = await query(sql);
+  return result !== null;
+
 }
 
 /**
@@ -71,6 +72,19 @@ export async function init(): Promise<boolean> {
  */
 export async function listTodos(): Promise<Todo[] | null> {
   // SELECT id, title, finished FROM todos ORDER BY finished ASC, created DESC
+
+  const sql = `
+  SELECT id, title, finished, created
+  FROM todos
+  ORDER BY finished ASC, created DESC
+  `;
+
+  const result = await query<Todo>(sql);
+  if(result === null){
+    return null;
+  } else {
+    return result.rows
+  }
 }
 
 /**
@@ -80,6 +94,19 @@ export async function listTodos(): Promise<Todo[] | null> {
  */
 export async function createTodo(title: string): Promise<Todo | null> {
   // INSERT INTO todos (title) VALUES ($1) RETURNING id, title, finished
+  const sql = `
+  INSERT INTO todos (title)
+  VALUES ($1)
+  RETURNING id, title, finished, created
+  `;
+  const result = await query<Todo>(sql, [title]);
+  if(result === null){
+    return null;
+  }
+  if (result.rows.length !== 1) {
+    return null;
+  }
+  return result.rows[0];  
 }
 
 /**
@@ -95,6 +122,21 @@ export async function updateTodo(
   finished: boolean,
 ): Promise<Todo | null> {
   // UPDATE todos SET title = $1, finished = $2 WHERE id = $3 RETURNING id, title, finished
+  const sql = `
+  UPDATE todos
+  SET title = $1, finished = $2
+  WHERE id = $3
+  RETURNING id, title, finished, created
+  `;
+
+  const result = await query<Todo>(sql, [title, finished, id]);
+  if(result === null){
+    return null;
+  }
+  if (result.rows.length !== 1) {
+    return null;
+  }
+  return result.rows[0];  
 }
 
 /**
@@ -104,6 +146,15 @@ export async function updateTodo(
  */
 export async function deleteTodo(id: number): Promise<boolean | null> {
   // DELETE FROM todos WHERE id = $1
+  const sql = `
+  DELETE FROM todos WHERE id = $1
+  `;
+  const result = await query(sql, [id]);
+  if(result === null) {
+    return null;
+  } else {
+    return result.rowCount > 0;
+  }
 }
 
 /**
@@ -112,4 +163,13 @@ export async function deleteTodo(id: number): Promise<boolean | null> {
  */
 export async function deleteFinishedTodos(): Promise<number | null> {
   // DELETE FROM todos WHERE finished = true
+  const sql = `
+  DELETE FROM todos WHERE finished = true
+  `;
+  const result = await query(sql);
+  if(result === null) {
+    return null;
+  } else {
+    return result.rowCount;
+  }
 }
