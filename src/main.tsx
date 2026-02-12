@@ -4,6 +4,7 @@ import { TodoPage } from './components/TodoPage.js';
 import { init, listTodos, createTodo, updateTodo, deleteTodo, deleteFinishedTodos } from './lib/db.js';
 import { titleSchema } from './lib/validation.js';
 import { NotFoundPage } from './components/NotFoundPage.js';
+import { ErrorPage } from './components/ErrorPage.js';
 
 // búum til og exportum Hono app
 export const app = new Hono();
@@ -17,7 +18,7 @@ app.get('/', async (c) => {
   const todos = await listTodos();
 
   if (!todos) {
-    return c.text('Database error', 500);
+    return c.html(<ErrorPage message="Database error" />, 500);
   }
 
   return c.html(<TodoPage todos={todos} />);
