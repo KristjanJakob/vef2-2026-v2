@@ -19,7 +19,7 @@ export const TodoPage: FC<TodoPageProps> = ({
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <form method="post" action="/add">
-        <input name="title" value={value} />
+        <input name="title" defaultValue={value} />
         <button type="submit">Bæta við</button>
       </form>
 
@@ -28,7 +28,26 @@ export const TodoPage: FC<TodoPageProps> = ({
       ) : (
         <ul>
           {todos.map((todo) => (
-            <li key={todo.id}>{todo.title}</li>
+            <li key={todo.id}>
+              <form method="post" action={`/update/${todo.id}`}>
+                <input name="title" defaultValue={todo.title} />
+
+                <label>
+                  <input
+                    type="checkbox"
+                    name="finished"
+                    defaultChecked={todo.finished}
+                  />
+                  Lokið
+                </label>
+
+                <button type="submit">Uppfæra</button>
+              </form>
+
+              <form method="post" action={`/delete/${todo.id}`}>
+                <button type="submit">Eyða</button>
+              </form>
+            </li>
           ))}
         </ul>
       )}
