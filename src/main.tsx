@@ -41,9 +41,9 @@ app.post('/add', async (c) => {
     )
   }
   const created = await createTodo(result.data);
-  if(!created) {
-    return c.text('Database error', 500);
-  }
+  if (!created) {
+    return c.html(<ErrorPage message="Database error" />, 500);
+  }  
   return c.redirect('/');
 });
 
