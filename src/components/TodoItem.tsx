@@ -9,7 +9,7 @@ export const TodoItem: FC<TodoItemProps> = ({ todo }) => {
   return (
     <li>
       <form method="post" action={`/update/${todo.id}`}>
-        <input name="title" value={todo.title} />
+        <input name="title" value={todo.title} class={todo.finished ? 'finished' : ''} />
 
         <label>
           <input type="checkbox" name="finished" checked={todo.finished} />
