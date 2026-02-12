@@ -150,12 +150,11 @@ export async function deleteTodo(id: number): Promise<boolean | null> {
   `;
 
   const result = await query<pg.QueryResultRow>(sql, [id]);
-
   if (!result) return null;
 
-  return result.rowCount > 0;
+  const rowCount = result.rowCount ?? 0;
+  return rowCount > 0;
 }
-
 
 /**
  * Delete all finished todo items from the database.
