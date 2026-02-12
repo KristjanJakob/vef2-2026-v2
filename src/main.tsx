@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { TodoPage } from './components/TodoPage.js';
-import { init, listTodos } from './lib/db.js';
+import { init, listTodos, createTodo } from './lib/db.js';
 
 // búum til og exportum Hono app
 export const app = new Hono();

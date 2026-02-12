@@ -153,7 +153,7 @@ export async function deleteTodo(id: number): Promise<boolean | null> {
   if(result === null) {
     return null;
   } else {
-    return result.rowCount > 0;
+    const result = await query<pg.QueryResultRow>(sql, [id]);
   }
 }
 
@@ -170,6 +170,6 @@ export async function deleteFinishedTodos(): Promise<number | null> {
   if(result === null) {
     return null;
   } else {
-    return result.rowCount;
+    const result = await query<pg.QueryResultRow>(sql);
   }
 }
