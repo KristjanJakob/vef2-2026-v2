@@ -14,14 +14,21 @@ export const TodoPage: FC<TodoPageProps> = ({
    value = '',
   
   }) => {
+  const hasFinished = todos.some((t) => t.finished === true);
   return (
     <section>
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <form method="post" action="/add">
-        <input name="title" defaultValue={value} />
+        <input name="title" value={value} />
         <button type="submit">Bæta við</button>
       </form>
+      
+      {hasFinished && (
+        <form method="post" action="/delete/finished">
+          <button type="submit">Eyða öllum kláruðum</button>
+        </form>
+      )}
 
       {todos.length === 0 ? (
         <p>Engin verkefni til</p>
@@ -30,13 +37,13 @@ export const TodoPage: FC<TodoPageProps> = ({
           {todos.map((todo) => (
             <li key={todo.id}>
               <form method="post" action={`/update/${todo.id}`}>
-                <input name="title" defaultValue={todo.title} />
+                <input name="title" value={todo.title} />
 
                 <label>
                   <input
                     type="checkbox"
                     name="finished"
-                    defaultChecked={todo.finished}
+                    checked={todo.finished}
                   />
                   Lokið
                 </label>

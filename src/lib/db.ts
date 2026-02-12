@@ -74,7 +74,7 @@ export async function listTodos(): Promise<Todo[] | null> {
   // SELECT id, title, finished FROM todos ORDER BY finished ASC, created DESC
 
   const sql = `
-  SELECT id, title, finished, created
+  SELECT id, title, finished::boolean AS finished, created
   FROM todos
   ORDER BY finished ASC, created DESC
   `;
