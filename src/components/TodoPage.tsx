@@ -15,6 +15,7 @@ export const TodoPage: FC<TodoPageProps> = ({ todos, error, value }) => {
 
   return (
     <Layout title="Verkefnalisti">
+      <h1>Todo Listi</h1>
       <TodoForm error={error} value={value} />
 
       <form method="post" action="/delete/finished">
