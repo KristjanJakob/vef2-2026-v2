@@ -13,6 +13,16 @@ await init();
 app.use('/static/*', serveStatic({ root: './' }));
 
 app.get('/', async (c) => {
+  const todos = await listTodos();
+
+  if (!todos) {
+    return c.text('Database error', 500);
+  }
+
+  return c.html(<TodoPage todos={todos} />);
+});
+
+app.post('/add', async (c) => {
   const body = await c.req.parseBody();
   const title = body.title;
   const result = titleSchema.safeParse(title);

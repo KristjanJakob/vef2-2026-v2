@@ -145,31 +145,31 @@ export async function updateTodo(
  * @returns True if the todo item was deleted, false if not found, or null on error.
  */
 export async function deleteTodo(id: number): Promise<boolean | null> {
-  // DELETE FROM todos WHERE id = $1
   const sql = `
-  DELETE FROM todos WHERE id = $1
+    DELETE FROM todos WHERE id = $1
   `;
-  const result = await query(sql, [id]);
-  if(result === null) {
-    return null;
-  } else {
-    const result = await query<pg.QueryResultRow>(sql, [id]);
-  }
+
+  const result = await query<pg.QueryResultRow>(sql, [id]);
+
+  if (!result) return null;
+
+  return result.rowCount > 0;
 }
+
 
 /**
  * Delete all finished todo items from the database.
  * @returns Number of deleted todo items, or null on error.
  */
 export async function deleteFinishedTodos(): Promise<number | null> {
-  // DELETE FROM todos WHERE finished = true
   const sql = `
-  DELETE FROM todos WHERE finished = true
+    DELETE FROM todos WHERE finished = true
   `;
-  const result = await query(sql);
-  if(result === null) {
-    return null;
-  } else {
-    const result = await query<pg.QueryResultRow>(sql);
-  }
+
+  const result = await query<pg.QueryResultRow>(sql);
+
+  if (!result) return null;
+
+  return result.rowCount;
 }
+
