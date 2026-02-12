@@ -3,6 +3,7 @@ import { serveStatic } from '@hono/node-server/serve-static';
 import { TodoPage } from './components/TodoPage.js';
 import { init, listTodos, createTodo, updateTodo, deleteTodo, deleteFinishedTodos } from './lib/db.js';
 import { titleSchema } from './lib/validation.js';
+import { NotFoundPage } from './components/NotFoundPage.js';
 
 // búum til og exportum Hono app
 export const app = new Hono();
@@ -86,3 +87,5 @@ app.post('/delete/:id', async (c) => {
   if(ok === null) return c.text('Database error', 500);
   return c.redirect('/');  
 });
+
+app.notFound((c) => c.html(<NotFoundPage />));
